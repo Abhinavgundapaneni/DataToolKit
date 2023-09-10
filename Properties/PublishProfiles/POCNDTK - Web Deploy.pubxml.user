@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file is used by the publish/package process of your Web project. You can customize the behavior of this process
+by editing this MSBuild file. In order to learn more about this please visit https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project>
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAr0+iq557Z0WbslFasVxQ5wAAAAACAAAAAAAQZgAAAAEAACAAAACGOw6oNZq+VWcrNJtFad8ZxaUm4QfnNrrh6JVrMi8+xgAAAAAOgAAAAAIAACAAAAAp88wSyY8VmHlC6kDlEE6PlX5sdBjv1+RL307WDeGmY4AAAADacPDAkpuemnpMlSSeKksjXEhqqJezq45gRTY2TaQQrn2IM5DQ9x9iGIisBSn8mnAYIfdv1Gu7J7IMvL6vPDL04DuqzVZ9ul/4CFfZ60fdGkjZaDCpnKMkXC9PuxXJwBxQtYepmO2hv4f4LoV4eOvbpzRpEIHysbF5pbrO2hy9ekAAAAB51rhbiTlSGzZ1zAh7KIjDWAKinrLmFcNgBYEl1WAPZ02fUydfhnZpIuJ7E+LOpG8iAgZQTyWavu6Y0JfMXgWH</EncryptedPassword>
+    <History>True|2023-09-10T14:45:54.1218497Z;True|2023-09-08T14:39:35.6453789-05:00;True|2023-09-08T14:20:55.0025593-05:00;True|2023-09-08T14:17:01.2720871-05:00;True|2023-09-08T13:51:57.0951370-05:00;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+  <ItemGroup>
+    <DestinationConnectionStrings Include="DataToolKitDbContextConnection">
+      <Value>Server=tcp:plavasql.database.windows.net,1433%3bInitial Catalog=DTK%3bPersist Security Info=False%3bUser ID=sqladmin%3bPassword=Sqlplava%40admin%3bMultipleActiveResultSets=False%3bEncrypt=True%3bTrustServerCertificate=False%3bConnection Timeout=30%3b</Value>
+    </DestinationConnectionStrings>
+  </ItemGroup>
+</Project>

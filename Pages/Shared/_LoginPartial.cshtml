@@ -1,0 +1,31 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using DataToolKit.Areas.Identity.Data
+@using System.Security.Claims;
+
+@inject SignInManager<DataToolKitUser> SignInManager
+@inject UserManager<DataToolKitUser> UserManager
+
+
+
+<ul class="navbar-nav">
+    <li class="nav-item">
+        <a class="nav-link text-dark" id="home" asp-page="/Home/Index">Home</a>
+    </li>
+@if (SignInManager.IsSignedIn(User))
+{
+
+    @if (User.IsInRole("Admin"))
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" id="users" asp-page="/Users">Users</a>
+        </li>
+    }
+    <li class="nav-item">
+           <a class="nav-link text-dark" id="logout" asp-page="/Home/Logout" >Logout</a>
+    </li>
+
+    <li class="nav-item">
+        <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.FindFirst("FirstName")?.Value</a>
+    </li>
+} 
+</ul>

@@ -1,0 +1,34 @@
+﻿@model List<DataToolKit.Models.BatchDataFile>
+@{
+    Layout = null;
+}
+
+<div class="table-responsive">          
+    <h6>Batch Details : @Model[0]?.BatchId</h6>
+    <div>
+        <table id="batchGrid" class="table">
+            <thead>
+                <tr>                           
+                    <th>
+                        NPI
+                    </th>
+                    <th>
+                        Segment
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var batchDataFile in Model)
+                {
+                    <tr>
+                        <td>@batchDataFile.NPI</td>
+                        <td>@batchDataFile.Segment</td>                               
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+

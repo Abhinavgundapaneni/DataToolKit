@@ -1,0 +1,405 @@
+﻿/* Global Styles */
+body {
+    font-family: 'Times New Roman', serif;
+    margin: 0;
+    padding: 0;
+    background-color: white;
+    color: #333;    
+    font-size: 15px;
+}
+
+.container {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0px;
+}
+
+.logo-image {
+    width: 130px; /* Adjust the size as needed */
+    height: auto; /* Preserve aspect ratio */
+    padding-left:20px;
+}
+
+.app-name h1 {
+    margin-top: 30px;
+    margin-left: 20px; /* Adjust the space between logo and app name */
+    font-size: 24px; /* Adjust font size as needed */
+    font-weight: bold; /* Add font-weight if desired */
+    color: black;
+}
+
+/* Custom background color for the header */
+.header-custom {
+    background-color: #727576; /* Change to your desired color #7e7e7e #32d6ff */
+}
+
+/* Custom styles for header content */
+.header-custom .navbar-brand {
+    color: white;
+    font-weight: bold;
+}
+
+.header-custom .navbar-brand:hover {
+    color: #444;
+}
+
+.header-custom .nav-link {
+    color: #444;
+    font-weight: bold;
+}
+
+.header-custom .nav-link:hover {
+    color: white;
+    text-decoration: none;
+    border-bottom: 4px solid green;
+}
+
+.navbar-nav .nav-item .nav-link:active,
+.navbar-nav .nav-item .nav-link.active {
+    background-color: #f8f9fa; /* Change to your desired color */
+    color: #333; /* Change to your desired color */
+    /* Add other styles as needed */
+}
+
+.filter-grid {
+    width: 80%;
+    display:flex;
+    justify-content:space-around;
+}
+
+.form-table {
+    width: 95%;
+}
+
+/* Adjust the width of each column */
+.form-table td {
+    width: 16.666%; /* Set each column to take up 1/6 of the table width */
+}
+
+/* Add some padding to the cells for spacing */
+.form-table td {
+    padding: 5px; /* Adjust the padding as needed */
+}
+
+/* Reduce the font size for the content within the table cells */
+.form-table input[type="text"],
+.form-table select {
+    font-size: 14px; /* Adjust the font size as needed */
+    width: 100%;
+    margin: 0px;
+    padding: 3px;
+}
+
+/* Style the labels if necessary */
+.form-table label {
+    font-weight: bold; /* Make labels bold if desired */
+}
+
+.login-submit {
+    width: 60%;
+}
+/* Style the submit button */
+.form-table button {
+    background-color: #007bff; /* Blue background color */
+    color: #fff; /* White text color */
+    border: none;
+    padding: 5px 15px; /* Adjust padding as needed */
+    cursor: pointer;
+    font-size: 14px; /* Adjust the font size as needed */
+}
+
+/* Style the success message */
+#success-message {
+    color: #28a745; /* Green color for success message text */
+    font-size: 14px; /* Adjust the font size as needed */
+    margin-top: 10px; /* Add margin to separate it from the form */
+}
+
+/* Style for validation messages */
+.form-table .validation-message {
+    color: #ff0000;
+}
+
+
+.label-cell {
+    width: 30%;
+    text-align: right;
+    padding: 1px 5px; /* Adjust the vertical padding */
+}
+
+.control-cell {
+    width: 70%;
+    padding: 1px 5px; /* Adjust the vertical padding */
+}
+
+.button-cell {
+    text-align: left;
+}
+
+/* File Input Styles */
+/* Style the container cell */
+.control-cell {
+    padding: 10px; /* Add padding for spacing */
+    
+}
+
+/* Style the "Choose File" button */
+.form-control-file::-webkit-file-upload-button {
+    font-weight: bold;
+    padding: 0.2em 0.4em;
+    border-radius: 0.2em;
+    background-color: #bcd1d7;
+    transition: 1s;
+}
+
+.form-control-file::-webkit-file-upload-button:hover {
+    background-color: #94c83d;
+    border: 2px solid #00cec9;
+}
+
+
+/* Button Styles */
+.btn-primary {
+    background-color: #32d6ff;
+    border: none;
+    transition: background-color 0.3s ease;
+    color: #fff;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: #94c83d;
+}
+
+/* Form Styles */
+.form-control {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px;
+    width: 30%;
+    margin-bottom: 10px;
+}
+
+.form-control .input {
+    width: 60%;
+}
+
+
+/* Add these styles to your site's CSS file or in a <style> tag in your Razor Page */
+
+/* Style for the table */
+.table {
+    table-layout: fixed;
+    width: 99%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    margin-left: 15px;
+    margin-right: 50px;
+    font-size: 15px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Style for table header */
+    .table th {
+
+        background-color: #6ba7b6; /* Header background color */
+        color: White; /* Header text color */        
+        font-weight: bold;
+        padding: 12px;
+        text-align: left;
+        border-bottom: 2px solid #ccc;      
+    }
+
+/* Style for the sorting links */
+#batchGrid thead th a {
+    color: #fff; /* Link text color */
+    text-decoration: none; /* Remove underlines from links */
+    display: inline-block; /* Make links block-level for padding */
+    padding-right: 20px; /* Add padding to the right of links */
+}
+
+/* Style for the sorting links on hover */
+#batchGrid thead th a:hover {
+    text-decoration: underline; /* Add underline on hover */
+}
+
+/* Style for table rows */
+.table tr {
+    background-color: #fff;
+    transition: background-color 0.3s;
+}
+
+/* Hover effect on table rows */
+.table tr:hover {
+    background-color: #f5f5f5;
+}
+
+/* Style for table cells */
+.table td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+}
+
+/* Style for table footer */
+.table tfoot th {
+    background-color: #f8f9fa; /* Footer background color */
+    color: #333; /* Footer text color */
+    font-weight: bold;
+    padding: 12px;
+    text-align: left;
+    border-top: 2px solid #ccc;
+}
+
+/* Styles for the success message cell */
+.success-message-cell {
+    vertical-align: top; /* Align content to the top of the cell */
+}
+
+/* Styles for the success message */
+#upload-success-message { 
+    padding: 10px;
+    border: 1px solid #4CAF50;
+    background-color: #DFF0D8;
+    color: #4CAF50;
+    border-radius: 5px;
+    text-align: center;
+}
+
+    #upload-success-message.show {
+        display: block; /* Display the message as a block element inside the cell */
+    }
+
+
+/* Jumbotron Styles */
+.jumbotron {
+    background-color: #f0f0f0;
+    padding: 60px 0;
+    text-align: center;
+    color: #333;
+}
+
+/* Modal Styles */
+.modal-content {
+    border: none;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Pagination Styles */
+.pagination {
+    justify-content: center;
+    margin-top: 20px;
+}
+
+
+
+/* Style for the popup container */
+#popup-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+/* Add these styles to your site's CSS file or in a <style> tag in your Razor Page */
+
+/* Style for the popup container */
+.popup {
+    display: none; /* Hide the popup by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background overlay */
+    z-index: 9999; /* Ensure the popup is on top of other elements */
+    overflow-y: auto; /* Enable vertical scroll when needed */
+}
+
+/* Style for the popup content */
+.popup-content {
+    background-color: #fff;
+    width: 80%; /* Adjust the width as needed */
+    max-height: 80%; /* Limit the height and enable vertical scroll when content exceeds */
+    margin: 50px auto; /* Center the popup vertically and horizontally */
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow-y: auto; /* Enable vertical scroll when content exceeds */
+}
+
+/* Style for the close button */
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #333;
+}
+
+/* Style for <h5> tags */
+h6 {
+    font-family: Arial, sans-serif; /* Choose your desired font family */
+    font-size: 15px; /* Adjust the font size as needed */
+    color: black; /* Choose your desired text color */
+    margin-left:15px;
+    font-weight: bold; /* Optionally, make the text bold */
+}
+
+/* Footer Styles */
+.footer {
+    background-color: #ccc;
+    color: #fff;
+    text-align: center;
+    bottom: 0;
+    height: 2em;
+    left: 0;
+    position: relative; /*changed to relative from fixed also works if position is not there font-size: small;*/
+    width: 100%;
+}
+
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+    .navbar-collapse {
+        background-color: #f0f0f0; /* Set a different background color */
+        border-top: 1px solid #ccc; /* Add a border */
+        padding: 10px; /* Add padding for spacing */
+    }
+
+    .navbar-nav {
+        flex-direction: column; /* Stack navigation links vertically */
+        margin: 20px;
+    }
+
+    .navbar-nav .nav-item {
+        margin-bottom: 5px; /* Add spacing between links */
+    }
+
+}
+
+/* Style the superscript (*) for required fields */
+label sup {
+    vertical-align: baseline; /* Position the superscript element above the text */
+    font-size: smaller; /* Adjust the font size of the superscript */
+    color: red; /* Set the color to red or your desired color */
+}
+
+
+/* Style for invalid input fields */
+/*input:invalid {
+    border-color: red;*/ /* Set the border color to red for invalid input fields */
+/*}*/
+
+/* Style for valid input fields (optional) */
+/*input:valid {
+    border-color: #ced4da;*/ /* Set the border color to a neutral color for valid input fields */
+/*}*/

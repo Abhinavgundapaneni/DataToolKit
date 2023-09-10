@@ -1,0 +1,110 @@
+﻿@page
+@model DataToolKit.Pages.Home.UsersModel
+@{
+    ViewData["Title"] = "Users";
+}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+
+<div id="Reset-Password-Modal" class="modal"> 
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Reset password</h4>
+                <button type="button" class="close-modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <form id="resetPasswordForm" asp-route-returnUrl="/Users" method="post" asp-page-handler="ResetPassword">
+                    <div class="form-floating">
+                        <input type="hidden" class="form-control"  id="selectedUserId" name="selectedUserId" />
+                    </div>
+                    <div class="form-floating">
+                        <input asp-for="Input.NewPassword" class="form-control" autocomplete="new-password" aria-required="true" />
+                        <label asp-for="Input.NewPassword"></label>
+                        <span asp-validation-for="Input.NewPassword" class="text-danger"></span>
+                    </div>
+                    <div class="form-floating">
+                        <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="confirm-password" aria-required="true" />
+                        <label asp-for="Input.ConfirmPassword"></label>
+                        <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="button" class="btn btn-danger close-modal">Close</button>
+                    </div>
+                    
+                </form>
+            </div>
+
+            <!-- Modal footer -->
+            
+        </div>
+    </div>
+</div>
+
+<div>
+    <h2>Users</h2>
+
+    <div>
+        <a type="button" class="btn btn-primary" style="float:right" asp-page="/Home/Register">Add User</a>
+    </div>
+
+    <div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model.UsersList)
+                {
+                    <tr>
+                        <td style="width:20%">@user.firstName @user.lastName</td>
+                        <td style="width:20%">@user.Email</td>
+                        <td style="width:20%">
+                            <form method="post" asp-page-handler="Delete" asp-route-id="@user.Id">
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        <td style="width:20%">
+                            <button type="button" class="btn btn-primary open-modal" data-id="@user.Id" data-toggle="modal" data-target="#Reset-Password-Modal">
+                                Reset password
+                            </button>
+                        </td>
+                        
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        $(".open-modal").click(function () {
+            var buttonId = $(this).data("id");
+            $("#selectedUserId").val(buttonId);
+            $("#Reset-Password-Modal").modal("show");
+        });
+
+        $(".close-modal").click(function () {
+            $("#Reset-Password-Modal").modal("hide");
+        });
+
+        $("#resetPasswordForm").submit(function (e) {
+            e.preventDefault();
+            var selectedUserId = $("#selectedUserId").val();
+            $(this).attr("action", `/Users?id=${selectedUserId}&returnUrl=%2FUsers&handler=ResetPassword`);
+            this.submit();
+        });
+    });
+</script>

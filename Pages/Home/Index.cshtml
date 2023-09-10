@@ -1,0 +1,271 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Data Tool Kit";
+}
+@using Microsoft.AspNetCore.Identity
+@using DataToolKit.Pages.Home
+@using DataToolKit.Areas.Identity.Data
+
+@inject SignInManager<DataToolKitUser> SignInManager
+@inject UserManager<DataToolKitUser> UserManager
+@using PagedList.Core;
+@using X.PagedList.Mvc.Core;
+@using X.PagedList.Web.Common;
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <div class="container mt-4">
+        <h6>Upload Data</h6>
+        <form method="post" enctype="multipart/form-data">
+            <table class="form-table">
+                <tr>
+                        <td class="label-cell">
+                        <label asp-for="Batch.CustomerName">Customer Name<sup>*</sup> :</label>
+                    </td>
+                    <td class="control-cell">
+                        <input asp-for="Batch.CustomerName" class="form-control" required />
+                        <span asp-validation-for="Batch.CustomerName"></span>
+                    </td>
+                    <td class="label-cell">
+                        <label asp-for="Batch.RequestTypeCode">Request Type<sup>*</sup> :</label>
+                    </td>
+                    <td class="control-cell">
+                        <select asp-for="Batch.RequestTypeCode" class="form-control" required>
+                            <option value="Billable">Billable</option>
+                            <option value="Non-Billable">Non-Billable</option>
+                        </select>
+                        <span asp-validation-for="Batch.RequestTypeCode"></span>
+                    </td>
+                </tr>       
+                <tr>           
+                    <td class="label-cell">
+                        <label asp-for="Batch.ReportTitle">Report Title<sup>*</sup> :</label>
+                    </td>
+                    <td class="control-cell">
+                        <input asp-for="Batch.ReportTitle" class="form-control" required />
+                        <span asp-validation-for="Batch.ReportTitle"></span>
+                    </td>
+                    <td class="label-cell">
+                        <label asp-for="Batch.ProjectCode">Project Code<sup>*</sup> :</label>
+                    </td>
+                    <td class="control-cell">
+                        <input asp-for="Batch.ProjectCode" class="form-control" required />
+                        <span asp-validation-for="Batch.ProjectCode"></span>
+                    </td>
+                </tr>       
+                <tr>
+                    <td class="label-cell">
+                        <label asp-for="Batch.ResultEmail1">Email<sup>*</sup> :</label>
+                    </td>
+                    <td class="control-cell">
+                        <input asp-for="Batch.ResultEmail1" class="form-control" required />
+                        <span asp-validation-for="Batch.ResultEmail1"></span>
+                    </td>
+                    <td class="label-cell">
+                        <label for="fileUpload">Select File<sup>*</sup> :</label>
+                    </td>
+                    <td class="control-cell">
+                        <input type="file" name="postedFile" id="postedFile" class="form-control-file" required />
+                    </td>
+
+                    <td class="button-cell" colspan="1">
+                        <button type="submit" class="btn btn-primary">Upload</button>&nbsp;
+                        @*  <button type="submit" name="clearButton" class="btn btn-secondary">Clear</button> *@
+                    </td>
+                    <td class="success-message-cell" colspan="2">
+
+                        @if (!string.IsNullOrEmpty(TempData["UploadSuccessMessage"]?.ToString()))
+                        {
+                            <div id="upload-success-message" class="alert alert-success">
+                                @TempData["UploadSuccessMessage"]
+                            </div>
+                        }
+                    </td>
+                </tr>      
+
+            </table>
+        </form>
+    </div>
+
+    <hr />
+
+    <div class="filter-grid">
+        <form method="get">
+            <label for="searchColumn"> Filter Column : </label>
+            <select name="searchColumn" id="searchColumn">
+                <option value="customerName">Customer Name</option>
+                <option value="requestType">Request Type</option>
+                <option value="reportName">Report</option>
+                <option value="ProjectCode">Project Code</option>
+            </select>
+            <input type="text" name="searchString" placeholder="Search string" />
+            <button type="submit" asp-page-handler="OnGet" class="btn btn-primary">Search</button>
+            <button type="submit" asp-route-handler="OnGet" asp-route-searchString="@null" asp-route-searchColumn="@null" class="btn btn-primary bg-danger">Reset</button>
+        </form>
+    </div>
+
+    <!-- Batch List -->
+    <div class="table-responsive">
+        <h6>Batch Control</h6>
+        <div>
+            <table id="batchGrid" class="table">
+                <thead>
+                    <tr>
+                        <th width="5%">
+                            <a asp-page="Index" asp-route-pagenumber="1" asp-route-sortOrder="@ViewData["BatchIdSortParam"]">ID</a>
+                        </th>
+                        <th width="8%">Status</th>
+                        <th width="10%">Customer Name</th>
+                        <th width="8%">Request Type</th>
+                        <th width="10%">Project Code</th>
+                        <th width="15%">Report</th>
+                        <th width="15%">File Name</th>
+                        <th width="10%">#Records</th>                        
+                        <th width="10%">Submitted By</th>
+                        <th width="10%">Submitted Date</th>
+                        <th width="5%">Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var batch in Model.Batches)
+                    {
+                        <tr>
+                            <td>@batch.BatchId</td>
+                            <td>@batch.StatusDescription </td>
+                            <td>@batch.CustomerName</td>
+                            <td>@batch.RequestTypeCode</td>
+                            <td>@batch.ProjectCode</td>
+                            <td>@batch.ReportTitle</td>
+                            <td>@batch.InputFileName</td>
+                            <td>@batch.InputRecordCount</td>                            
+                            <td>@batch.SubmitName</td>
+                            <td>@batch.SubmitDate</td>
+                            <td>
+                                <a class="open-popup-button"  data-batch-id="@batch.BatchId">View</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <!-- Paging controls -->
+            @* Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount *@
+            @Html.PagedListPager(Model.Batches, pagenumber => Url.Action("Home/Index", new { pagenumber }), new PagedListRenderOptions {
+        LiElementClasses = new string[] { "page-item" },
+        PageClasses = new string[] { "page-link" }
+        } )
+        </div>
+    </div>
+
+    <!-- Popup container -->
+    <div id="batchPopup" class="popup">
+        <!-- Popup content -->
+        <div class="popup-content">
+            <span class="close-button" id="closePopup">&times;</span>
+            <div id="batchPopupContent">
+                <!-- Content loaded from _BatchDataPartial.cshtml will be displayed here -->
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="row">
+        <section>
+            <form id="account" method="post" asp-page-handler="Login">
+                <h2>Login</h2>
+                <hr />
+                <input type="hidden" name="returnUrl" value="@Request.Query["returnUrl"]" />
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-floating">
+                    <input asp-for="Input.Email" class="form-control login" autocomplete="username" aria-required="true" />
+                    <label asp-for="Input.Email" class="form-label"></label>
+                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                </div>
+                <div class="form-floating">
+                    <input asp-for="Input.Password" class="form-control login" autocomplete="current-password" aria-required="true" />
+                    <label asp-for="Input.Password" class="form-label"></label>
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                </div>
+                <div>
+                    <div class="checkbox">
+                        <label asp-for="Input.RememberMe" class="form-label">
+                            <input class="form-check-input" asp-for="Input.RememberMe" />
+                            @Html.DisplayNameFor(m => m.Input.RememberMe)
+                        </label>
+                    </div>
+                </div>
+                <div>
+                    <button id="login-submit" type="submit" class="w-60 btn btn-lg btn-primary">Log in</button>
+                </div>
+
+            </form>
+        </section>
+    </div>
+}
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<!-- JavaScript code goes here -->
+<script>
+    $(document).ready(function () {
+        // Function to open the popup
+        function openPopup(batchId) {
+            // Use AJAX to load batch data and display it in the popup
+            $.ajax({
+                url: "/Home/Index?handler=LoadBatchData",
+                data: { batchId: batchId },
+                method: "GET",
+                success: function (data) {
+                    // Populate the popup with the data
+                    $("#batchPopupContent").html(data);
+
+                    // Show the popup
+                    $("#batchPopup").show();
+                },
+                error: function () {
+                    // Handle errors if necessary
+                }
+            });
+        }
+
+        // Attach a click event handler to the trigger buttons
+        $(".open-popup-button").click(function () {
+            // Get the BatchId associated with the clicked button
+            var batchId = $(this).data("batch-id");
+
+            // Open the popup with the associated BatchId
+            openPopup(batchId);
+        });
+
+        // Function to close the popup
+        function closePopup() {
+            // Hide the popup
+            $("#batchPopup").hide();
+        }
+
+        // Attach a click event handler to the close button
+        $("#closePopup").click(function () {
+            // Close the popup
+            closePopup();
+        });
+    });
+
+    function checkRequiredFields() {
+        const requiredInputs = document.querySelectorAll('input[required]');
+        let isEmpty = false;
+       
+        requiredInputs.forEach((input) => {           
+            if (input.value.trim() === '') {               
+                isEmpty = true;
+                input.classList.add('is-invalid'); // Optionally, add styling for invalid fields
+            } else {
+                input.classList.remove('is-invalid');
+            }
+        });
+
+        if (isEmpty) {
+            alert('* required'); // Display a message indicating that required fields are empty
+        }
+    }
+</script>
+

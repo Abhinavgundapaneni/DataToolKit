@@ -1,0 +1,227 @@
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using DataToolKit.Models;
+using DataToolKit.DataAccess;
+using System.Globalization;
+using System.Text;
+using X.PagedList;
+using System.Data.SqlClient;
+
+namespace DataToolKit.Pages.Home
+{
+    public class IndexModel : PageModel
+    {
+        private readonly ILogger<IndexModel> _logger;
+
+      
+        public IPagedList<BatchControl> Batches { get; private set; }
+
+        public IndexModel(ILogger<IndexModel> logger)
+        {
+            _logger = logger;
+            var dummyData = new List<BatchControl>();
+            Batches = new PagedList<BatchControl>(dummyData, pageNumber: 1, pageSize: 3);
+
+        }
+
+        [BindProperty]
+        public BatchControl Batch { get; set; }
+        
+        public int CurrentPage { get; private set; }
+        public int PageSize { get; private set; }
+
+        public IActionResult OnGetLoadBatchData(int batchId)
+        {
+            try {
+                // Load batch data by batchId (retrieve uploaded data)
+                DTKDB db = new DTKDB();
+                List<BatchDataFile> batchDataFile = db.GetBatchData(batchId);
+                
+                return Partial("_BatchDataPartial", batchDataFile); // Create a partial view for displaying batch data
+            }
+            catch (Exception ex)
+            {
+                // Log the exception for debugging purposes
+                // Return an error response
+                return StatusCode(500, new { error = ex.Message });
+            }
+
+        }
+
+        public IActionResult OnGet(int? pagenumber, string sortOrder)
+        {
+            TempData["UploadSuccessMessage"] = "";
+
+            // Load batch data from your data source and populate Batches
+            LoadBatchData(pagenumber, sortOrder);
+           
+            return Page();
+        }
+
+        public IActionResult OnPost()
+        {
+            int BatchId = 0;
+            string fileName = "";
+
+            if (ModelState.IsValid)
+            {
+                DTKDB db = new DTKDB();
+
+                IFormFile uploadedFile = Request.Form.Files["postedFile"];
+                if (uploadedFile != null && uploadedFile.Length > 0)
+                {
+                    fileName = uploadedFile.FileName;
+                    Batch.InputFileName = fileName;
+                }
+
+                // Save batch data and upload file here
+                BatchId = db.InsertBatchControl(Batch);
+                
+
+                if (uploadedFile != null && uploadedFile.Length > 0)
+                {
+                    string path = @"D:\temp\uploads";
+                    if (!Directory.Exists(path))
+                    {
+                        Directory.CreateDirectory(path);
+                    }
+                    //Save the uploaded Excel file.
+                    string filePath = Path.Combine(path, fileName);
+
+                    using (FileStream stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        uploadedFile.CopyTo(stream);
+                    }
+
+                    string csvData = System.IO.File.ReadAllText(filePath);
+
+                    bool firstRow = true;
+
+                    foreach (string row in csvData.Split('\n'))
+                    {
+                        if (!string.IsNullOrEmpty(row))
+                        {
+                            if (!string.IsNullOrEmpty(row))
+                            {
+                                if (firstRow)
+                                    firstRow = false;
+                                else
+                                {
+                                    BatchDataFile BDF = new BatchDataFile();
+                                    var values = SplitCsv(row);
+
+                                    BDF.BatchId = BatchId;
+                                    BDF.NPI = Convert.ToInt32(values[0]);
+                                    BDF.Segment = values[1];
+                                    string str = db.InsertBatchDataFile(BDF);
+
+                                    // Upload successful, set a success message
+                                    TempData["UploadSuccessMessage"] = "Batch upload was successful.";
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+
+            // Reload batch data after saving
+            LoadBatchData(1, "");
+            OnPostClearForm();
+
+            return Page();
+        }
+
+        private void LoadBatchData(int? pagenumber, string sortOrder)
+        {
+            // Define sorting options
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["BatchIdSortParam"] = string.IsNullOrEmpty(sortOrder) ? "batchid_desc" : "";
+            ViewData["VendorNameSortParam"] = sortOrder == "vendorname" ? "vendorname_desc" : "vendorname";
+
+            // Load batch data from the service
+            var batches = LoadBatchDataFromDatabase();
+
+            // Apply sorting
+            switch (sortOrder)
+            {
+                case "batchid_desc":
+                    batches = batches.OrderBy(b => b.BatchId).ToList();
+                    break;
+                case "vendorname":
+                    batches = batches.OrderBy(b => b.VendorName).ToList();
+                    break;
+                case "vendorname_desc":
+                    batches = batches.OrderByDescending(b => b.VendorName).ToList();
+                    break;
+                default:
+                    batches = batches.OrderByDescending(b => b.BatchId).ToList();
+                    break;
+            }
+
+            // Pagination
+            PageSize = 30; // Adjust the page size as needed
+            CurrentPage = pagenumber ?? 1;
+
+            // Create a StaticPagedList from the sorted list
+            Batches = batches.ToPagedList(CurrentPage, PageSize);
+        }
+
+        private List<BatchControl> LoadBatchDataFromDatabase()
+        {
+            DTKDB db = new DTKDB();
+            return db.GetBatchControls();
+        }
+
+        private List<string> SplitCsv(string csv)
+        {
+            var values = new List<string>();
+
+            int last = -1;
+            bool inQuotes = false;
+
+            int n = 0;
+            while (n < csv.Length)
+            {
+                switch (csv[n])
+                {
+                    case '"':
+                        inQuotes = !inQuotes;
+                        break;
+                    case ',':
+                        if (!inQuotes)
+                        {
+                            values.Add(csv.Substring(last + 1, (n - last)).Trim(' ', ','));
+                            last = n;
+                        }
+                        break;
+                }
+                n++;
+            }
+
+            if (last != csv.Length - 1)
+                values.Add(csv.Substring(last + 1).Trim());
+
+            return values;
+        }
+
+        public void OnPostClearForm()
+        {
+            // Clear the form fields by resetting the values in your PageModel
+            Batch.VendorName = string.Empty; 
+            Batch.CustomerName = string.Empty;
+            Batch.InputFileName = string.Empty;
+            Batch.ResultEmail1 = string.Empty;
+            Batch.DescriptionTitle = string.Empty; 
+            Batch.ProjectCode = string.Empty;
+            Batch.ReportTitle = string.Empty;
+            Batch.RequestTypeCode = string.Empty;
+            Batch.SubmitName = string.Empty;
+        }
+
+    }
+}
+
