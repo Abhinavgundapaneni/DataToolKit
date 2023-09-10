@@ -31,7 +31,7 @@
                         <label asp-for="Batch.RequestTypeCode">Request Type<sup>*</sup> :</label>
                     </td>
                     <td class="control-cell">
-                        <select asp-for="Batch.RequestTypeCode" class="form-control" required>
+                        <select asp-for="Batch.RequestTypeCode" class="dropdown" required c>
                             <option value="Billable">Billable</option>
                             <option value="Non-Billable">Non-Billable</option>
                         </select>
@@ -92,8 +92,8 @@
 
     <div class="filter-grid">
         <form method="get">
-            <label for="searchColumn"> Filter Column : </label>
-            <select name="searchColumn" id="searchColumn">
+            <label for="searchColumn"> Filter By : </label>
+            <select name="searchColumn" id="searchColumn" class="dropdown">
                 <option value="customerName">Customer Name</option>
                 <option value="requestType">Request Type</option>
                 <option value="reportName">Report</option>
@@ -142,7 +142,7 @@
                             <td>@batch.SubmitName</td>
                             <td>@batch.SubmitDate</td>
                             <td>
-                                <a class="open-popup-button"  data-batch-id="@batch.BatchId">View</a>
+                                <a class="open-popup-button" data-batch-id="@batch.BatchId" style="cursor: pointer">View</a>
                             </td>
                         </tr>
                     }

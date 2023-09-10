@@ -403,3 +403,52 @@ label sup {
 /*input:valid {
     border-color: #ced4da;*/ /* Set the border color to a neutral color for valid input fields */
 /*}*/
+
+
+.dropbtn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
+
+/* Style the dropdown container (hidden by default) */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Style the dropdown menu */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+    /* Style the dropdown links */
+    .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
+
+        /* Change color of dropdown links on hover */
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+/* Show the dropdown menu when the button is hovered over */
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+
+a {
+    color: blue;
+}
+
