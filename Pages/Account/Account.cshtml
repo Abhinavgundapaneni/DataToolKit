@@ -1,0 +1,120 @@
+﻿@page
+@model DataToolKit.Pages.Account.AccountModel
+@using DataToolKit.DataAccess
+
+@{
+    ViewData["Title"] = "Account Settings";
+}
+
+<h2>@ViewData["Title"]</h2>
+<div id="AccountSettings">
+    <div id="AccountSettingsNav">
+        <nav class="col-md-2 d-none d-md-block sidebar">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                   <button id="profileBtn" class="btn btn-primary" style="margin-bottom:10px">Profile</button>
+                </li>
+                <li class="nav-item">
+                    <button id="updatePasswordBtn" class="btn btn-primary" style="margin-bottom:10px">Update Password</button>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+        <div id="profileDiv" hidden>
+            <h3>Profile</h3>
+            <table class="table profile" style="width:60%; margin-left:0px">
+                <tr>
+                    <td>
+                        Name :
+                    </td>
+                    <td>
+                        @User.FindFirst("FirstName")?.Value
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Email :
+                    </td>
+                    <td>
+                        @User.Identity?.Name
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Role :
+                    </td>
+                    @if ((new Helper()).isLoggedInUserAdmin(User) == true)
+                    {
+                        <td>
+                            Admin
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                            User
+                        </td>
+                    }
+                </tr>
+            </table>
+        </div>
+
+        <div id="updatePasswordDiv" hidden=@TempData["HideUpdatePassword"]>
+            @TempData["ShowUpdatePassword"]
+            <h3>Update password</h3>
+            <form id="resetPasswordForm" asp-route-returnUrl="/Account/Account" method="post">
+                <div class="form-floating" >
+                    <input asp-for="Input.CurrentPassword" class="form-control" autocomplete="current-password" aria-required="true"  />
+                    <label asp-for="Input.CurrentPassword"></label>
+                    <span asp-validation-for="Input.CurrentPassword" class="text-danger"></span>
+                </div>
+                <div class="form-floating" >
+                    <input asp-for="Input.NewPassword" class="form-control" autocomplete="new-password" aria-required="true" />
+                    <label asp-for="Input.NewPassword"></label>
+                    <span asp-validation-for="Input.NewPassword" class="text-danger"></span>
+                </div>
+                <div class="form-floating">
+                    <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="confirm-password" aria-required="true" />
+                    <label asp-for="Input.ConfirmPassword"></label>
+                    <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                </div>
+
+                @if (!string.IsNullOrEmpty(TempData["Response"]?.ToString()))
+                {
+                    @if (TempData["Response"]?.ToString() == "Success")
+                    {
+                        <div id="upload-success-message" class="alert alert-success">
+                            Updated password successfully.
+                        </div>
+                    }
+                    @if (TempData["Response"]?.ToString() == "Failed")
+                    {
+                        <div id="upload-success-message" class="alert alert-danger">
+                            Failed to update password.
+                        </div>
+                    }
+                }
+
+                <div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        
+        $("#updatePasswordBtn").click(function () {
+            $("#updatePasswordDiv").attr('hidden', false);
+            $("#profileDiv").attr('hidden', true);
+        });
+        $("#profileBtn").click(function () {
+            $("#updatePasswordDiv").attr('hidden', true);
+            $("#profileDiv").attr('hidden', false);
+        });  
+    });
+</script>

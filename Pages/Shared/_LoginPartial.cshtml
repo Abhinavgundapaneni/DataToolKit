@@ -21,11 +21,14 @@
         </li>
     }
     <li class="nav-item">
-           <a class="nav-link text-dark" id="logout" asp-page="/Home/Logout" >Logout</a>
+            <form asp-page="/Logout" method="post">
+                <button class="nav-link text-dark" type="submit" id="logout">Logout</button>
+        </form>
+           
     </li>
 
     <li class="nav-item">
-        <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.FindFirst("FirstName")?.Value</a>
+        <a id="manage" class="nav-link text-dark" asp-page="/Account/Account" title="Manage">Hello @User.FindFirst("FirstName")?.Value</a>
     </li>
 } 
 </ul>

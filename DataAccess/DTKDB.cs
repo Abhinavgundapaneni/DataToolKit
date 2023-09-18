@@ -9,7 +9,8 @@ namespace DataToolKit.DataAccess
     {
         private SqlConnection sqlcon;
         public DTKDB(IConfiguration configuration)
-        { 
+        {
+            
             sqlcon = new(configuration.GetConnectionString("DataToolKitDbContextConnection"));
         }
         
@@ -19,7 +20,7 @@ namespace DataToolKit.DataAccess
 
             try
             {
-                SqlCommand cmd = new SqlCommand("Insert_Batch_Control_File", sqlcon);
+                SqlCommand cmd = new SqlCommand("[Uncovered].[Insert_Batch_Control_File]", sqlcon);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@BatchID", BC.BatchId);
                 cmd.Parameters.AddWithValue("@Status_Description", "In Progress");
@@ -71,7 +72,7 @@ namespace DataToolKit.DataAccess
 
             try
             {
-                SqlCommand cmd = new SqlCommand("Insert_Batch_data_File", sqlcon);
+                SqlCommand cmd = new SqlCommand("[Uncovered].[Insert_Batch_Data_File]", sqlcon);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@BatchID", BDF.BatchId);
                 cmd.Parameters.AddWithValue("@Batch_NPI", BDF.NPI);
@@ -96,9 +97,37 @@ namespace DataToolKit.DataAccess
             }
         }
 
+        public string UpdateBatchControlFile(int BatchId)
+        {
+
+
+            try
+            {
+                SqlCommand cmd = new SqlCommand("[Uncovered].[Update_Batch_Control_File_By_ID]", sqlcon);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@BatchID", BatchId);
+                cmd.Parameters.AddWithValue("@Action", "Update input_record_count");
+                sqlcon.Open();
+                cmd.ExecuteNonQuery();
+                sqlcon.Close();
+                return ("success");
+
+            }
+            catch (Exception ex)
+            {
+                if (sqlcon.State == ConnectionState.Open)
+                {
+                    sqlcon.Close();
+                }
+
+                return (ex.Message.ToString());
+
+            }
+        }
+
         public List<BatchControl> GetBatchControls()
         {
-            SqlCommand command = new SqlCommand("select * from [dbo].[Batch_Control_File]", sqlcon);
+            SqlCommand command = new SqlCommand("select * from [Uncovered].[Batch_Control_File]", sqlcon);
             command.CommandType = CommandType.Text;
             sqlcon.Open();
             SqlDataReader reader = command.ExecuteReader();

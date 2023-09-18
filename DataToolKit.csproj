@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>2d97f39b-72a3-4e97-a766-33a68ffedb94</UserSecretsId>
@@ -12,6 +12,13 @@
     <Content Remove="Pages\NewFolder\**" />
     <EmbeddedResource Remove="Pages\NewFolder\**" />
     <None Remove="Pages\NewFolder\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\UploadFiles\194_SampleNPIFile.csv" />
+    <Content Remove="wwwroot\UploadFiles\195_SampleNPIFile.csv" />
+    <Content Remove="wwwroot\UploadFiles\196_SampleNPIFile.csv" />
+    <Content Remove="wwwroot\UploadFiles\197_SampleNPIFile.csv" />
   </ItemGroup>
 
   <ItemGroup>

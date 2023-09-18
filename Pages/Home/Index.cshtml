@@ -74,7 +74,6 @@
                         @*  <button type="submit" name="clearButton" class="btn btn-secondary">Clear</button> *@
                     </td>
                     <td class="success-message-cell" colspan="2">
-
                         @if (!string.IsNullOrEmpty(TempData["UploadSuccessMessage"]?.ToString()))
                         {
                             <div id="upload-success-message" class="alert alert-success">
@@ -90,19 +89,35 @@
 
     <hr />
 
-    <div class="filter-grid">
+    <div class="filter-grid" >
+        <div>
         <form method="get">
             <label for="searchColumn"> Filter By : </label>
             <select name="searchColumn" id="searchColumn" class="dropdown">
                 <option value="customerName">Customer Name</option>
-                <option value="requestType">Request Type</option>
+                <option value="ProjectCode">Project Code</option>                
                 <option value="reportName">Report</option>
-                <option value="ProjectCode">Project Code</option>
+                <option value="requestType">Request Type</option>                
+                <option value="StatusDescription">Status</option>
+                <option value="SubmitName">Submitted By</option>
+                <option value="SubmitDate">Submitted Date</option>
             </select>
             <input type="text" name="searchString" placeholder="Search string" />
             <button type="submit" asp-page-handler="OnGet" class="btn btn-primary">Search</button>
             <button type="submit" asp-route-handler="OnGet" asp-route-searchString="@null" asp-route-searchColumn="@null" class="btn btn-primary bg-danger">Reset</button>
         </form>
+        </div>
+        <div>
+            <form>
+                <label for="pageSize">Page size :</label>
+                <select name="pageSize" id="pageSize">
+                    <option value="10" id="page-size-10" selected=@Model.PageSize.Equals(10)>10</option>
+                    <option value="25" id="page-size-25" selected=@Model.PageSize.Equals(25)>25</option>
+                    <option value="100" id="page-size-100" selected=@Model.PageSize.Equals(100)>100</option>
+                </select>
+                <button id="pageSizeSubmit" type="submit" asp-page-handler="OnGet" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
     </div>
 
     <!-- Batch List -->
@@ -150,7 +165,7 @@
             </table>
             <!-- Paging controls -->
             @* Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount *@
-            @Html.PagedListPager(Model.Batches, pagenumber => Url.Action("Home/Index", new { pagenumber }), new PagedListRenderOptions {
+            @Html.PagedListPager(Model.Batches, pagenumber => Url.Action("Home/Index", new { pagenumber, pageSize = Model.PageSize }), new PagedListRenderOptions {
         LiElementClasses = new string[] { "page-item" },
         PageClasses = new string[] { "page-link" }
         } )
@@ -208,6 +223,7 @@ else
 <!-- JavaScript code goes here -->
 <script>
     $(document).ready(function () {
+
         // Function to open the popup
         function openPopup(batchId) {
             // Use AJAX to load batch data and display it in the popup

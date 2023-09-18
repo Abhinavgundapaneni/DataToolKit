@@ -85,9 +85,10 @@ namespace DataToolKit.Pages.Home
 
         }
 
-        public IActionResult OnGet(int? pagenumber, string? sortOrder, string? searchColumn, string? searchString)
+        public IActionResult OnGet(int? pagenumber, string? sortOrder, string? searchColumn, string? searchString, int? pageSize)
         {
             TempData["UploadSuccessMessage"] = "";
+            PageSize = pageSize ?? 10;
 
             // Load batch data from your data source and populate Batches
             LoadBatchData(pagenumber, sortOrder, searchColumn, searchString);
@@ -115,7 +116,7 @@ namespace DataToolKit.Pages.Home
 
                 // Save batch data and upload file here
                 BatchId = db.InsertBatchControl(Batch);
-                
+                fileName = BatchId.ToString() + "_" + fileName;
 
                 if (uploadedFile != null && uploadedFile.Length > 0)
                 {
@@ -162,9 +163,19 @@ namespace DataToolKit.Pages.Home
                             }
                         }
                     }
+                    //if(System.IO.File.Exists(filePath))
+                    //{
+                    //    System.IO.File.Delete(filePath);
+                    //}
+                    
+
                 }
+                    
+
+                string rtnMessage = db.UpdateBatchControlFile(BatchId);
 
             }
+            
 
             // Reload batch data after saving
             LoadBatchData(1, "", null, null);
@@ -240,18 +251,24 @@ namespace DataToolKit.Pages.Home
                     case "customerName":
                         batches = batches.Where(x => x.CustomerName.ToLower().Contains(searchString.ToLower())).ToList();
                         break;
-                    case "requestType":
-                        batches = batches.Where(x => x.RequestTypeCode.ToLower().Contains(searchString.ToLower())).ToList();
+                    case "ProjectCode":
+                        batches = batches.Where(x => x.ProjectCode.ToLower().Contains(searchString.ToLower())).ToList();
                         break;
                     case "reportName":
                         batches = batches.Where(x => x.ReportTitle.ToLower().Contains(searchString.ToLower())).ToList();
                         break;
-                    case "ProjectCode":
-                        batches = batches.Where(x => x.ProjectCode.ToLower().Contains(searchString.ToLower())).ToList();
+                    case "requestType":
+                        batches = batches.Where(x => x.RequestTypeCode.ToLower().Contains(searchString.ToLower())).ToList();
                         break;
-
-
-
+                    case "SubmitDate":
+                        batches = batches.Where(x => x.SubmitDate.ToLower().Contains(searchString.ToLower())).ToList();
+                        break;
+                    case "SubmitName":
+                        batches = batches.Where(x => x.SubmitName.ToLower().Contains(searchString.ToLower())).ToList();
+                        break;
+                    case "StatusDescription":
+                        batches = batches.Where(x => x.StatusDescription.ToLower().Contains(searchString.ToLower())).ToList();
+                        break;
                     default:
                         break;
                 } 
@@ -275,9 +292,8 @@ namespace DataToolKit.Pages.Home
                     break;
             }
 
-            // Pagination
-            PageSize = 10; // Adjust the page size as needed
             CurrentPage = pagenumber ?? 1;
+            PageSize = PageSize > 0 ? PageSize : 10;
 
             // Create a StaticPagedList from the sorted list
 

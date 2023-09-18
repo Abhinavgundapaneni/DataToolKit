@@ -8,6 +8,15 @@ body {
     font-size: 15px;
 }
 
+#AccountSettings {
+    display:flex;
+    justify-content: left;
+}
+
+#AccountSettingsNav {
+    margin-right: 100px;
+}
+
 .container {
     max-width: 1600px;
     margin: 0 auto;
@@ -184,12 +193,9 @@ body {
     width: 60%;
 }
 
-
 /* Add these styles to your site's CSS file or in a <style> tag in your Razor Page */
-
 /* Style for the table */
 .table {
-    table-layout: fixed;
     width: 99%;
     border-collapse: collapse;
     margin-bottom: 20px;
@@ -417,7 +423,7 @@ label sup {
 /* Style the dropdown container (hidden by default) */
 .dropdown {
     position: relative;
-    display: inline-block;
+    display: inline-block;    
 }
 
 /* Style the dropdown menu */
