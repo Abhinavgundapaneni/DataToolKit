@@ -44,7 +44,7 @@
                     <td>
                         Role :
                     </td>
-                    @if ((new Helper()).isLoggedInUserAdmin(User) == true)
+                    @if ((new Helper(null)).isLoggedInUserAdmin(User) == true)
                     {
                         <td>
                             Admin

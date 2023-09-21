@@ -40,7 +40,7 @@ namespace DataToolKit.Pages.Home
             _configuration = configuration;
             _environment = environment;
             var dummyData = new List<BatchControl>();
-            _helper = new Helper();
+            _helper = new Helper(configuration);
             Batches = new PagedList<BatchControl>(dummyData, pageNumber: 1, pageSize: 3);
 
         }
@@ -103,7 +103,7 @@ namespace DataToolKit.Pages.Home
             return Page();
         }
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPostAsync()
         {
             int BatchId = 0;
             string fileName = "";
@@ -245,7 +245,9 @@ namespace DataToolKit.Pages.Home
                 //rtnVal = db.RunReportBatch(BatchId);
                 //Console.WriteLine("Upload end" + DateTime.Now.ToString());
             }
-            
+
+            //Send Mail to internal team
+            await _helper.sendEmailAsync(BatchId);
 
             // Reload batch data after saving
             LoadBatchData(1, "", null, null);
