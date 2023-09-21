@@ -2,6 +2,8 @@
 using System.Data;
 using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using System;
 
 namespace DataToolKit.DataAccess
 {
@@ -10,8 +12,9 @@ namespace DataToolKit.DataAccess
         private SqlConnection sqlcon;
         public DTKDB(IConfiguration configuration)
         {
-            
             sqlcon = new(configuration.GetConnectionString("DataToolKitDbContextConnection"));
+            //sqlcon = new("Data Source=4.236.176.13;Initial Catalog=Analytics;Persist Security Info=True;User ID=pocnhub;Password=");
+            
         }
         
         public int InsertBatchControl(BatchControl BC)
@@ -85,6 +88,33 @@ namespace DataToolKit.DataAccess
                 return ("success");
 
             }
+            catch (Exception ex)
+            {
+                if (sqlcon.State == ConnectionState.Open)
+                {
+                    sqlcon.Close();
+                }
+
+                return (ex.Message.ToString());
+
+            }
+        }
+
+        public string InsertBatchDataFileByTable(DataTable BatchDataFile_DataTable)
+        {
+
+
+            try
+            {
+                var cmdText = @"insert into [Uncovered].[Batch_data_File] (BatchID, Batch_NPI, Batch_Segment) select BatchID, Batch_NPI, Batch_Segment  from @BatchDataFile";                   
+
+                SqlCommand cmd = new SqlCommand(cmdText, sqlcon);
+                var param = cmd.Parameters.AddWithValue("@BatchDataFile", BatchDataFile_DataTable);
+                param.TypeName = "Uncovered.BatchDataFileType";
+                sqlcon.Open();
+                cmd.ExecuteNonQuery();
+                sqlcon.Close();
+                return ("success");            }
             catch (Exception ex)
             {
                 if (sqlcon.State == ConnectionState.Open)
@@ -177,5 +207,61 @@ namespace DataToolKit.DataAccess
             }
             return batchDataFile;
         }
+
+
+        public string RunProcessBatch (int BatchId)
+        {
+
+
+            try
+            {
+                SqlCommand cmd = new SqlCommand("[dbo].[ProcessBatch]", sqlcon);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@BatchNum", BatchId);
+                cmd.Parameters.AddWithValue("@FrontSwtich", 1);
+                sqlcon.Open();
+                cmd.ExecuteNonQuery();
+                sqlcon.Close();
+                return ("success");
+            }
+            catch (Exception ex)
+            {
+                if (sqlcon.State == ConnectionState.Open)
+                {
+                    sqlcon.Close();
+                }
+
+                return (ex.Message.ToString());
+
+            }
+        }
+
+        public string RunReportBatch(int BatchId)
+        {
+
+
+            try
+            {
+                SqlCommand cmd = new SqlCommand("[dbo].[ReportBatch]", sqlcon);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@BatchNum", BatchId);
+                sqlcon.Open();
+                cmd.ExecuteNonQuery();
+                sqlcon.Close();
+                return ("success");
+            }
+            catch (Exception ex)
+            {
+                if (sqlcon.State == ConnectionState.Open)
+                {
+                    sqlcon.Close();
+                }
+
+                return (ex.Message.ToString());
+
+            }
+        }
+
+
     }
 }

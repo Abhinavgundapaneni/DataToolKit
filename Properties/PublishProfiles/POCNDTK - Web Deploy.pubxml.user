@@ -6,13 +6,8 @@ by editing this MSBuild file. In order to learn more about this please visit htt
 <Project>
   <PropertyGroup>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
-    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAr0+iq557Z0WbslFasVxQ5wAAAAACAAAAAAAQZgAAAAEAACAAAACGOw6oNZq+VWcrNJtFad8ZxaUm4QfnNrrh6JVrMi8+xgAAAAAOgAAAAAIAACAAAAAp88wSyY8VmHlC6kDlEE6PlX5sdBjv1+RL307WDeGmY4AAAADacPDAkpuemnpMlSSeKksjXEhqqJezq45gRTY2TaQQrn2IM5DQ9x9iGIisBSn8mnAYIfdv1Gu7J7IMvL6vPDL04DuqzVZ9ul/4CFfZ60fdGkjZaDCpnKMkXC9PuxXJwBxQtYepmO2hv4f4LoV4eOvbpzRpEIHysbF5pbrO2hy9ekAAAAB51rhbiTlSGzZ1zAh7KIjDWAKinrLmFcNgBYEl1WAPZ02fUydfhnZpIuJ7E+LOpG8iAgZQTyWavu6Y0JfMXgWH</EncryptedPassword>
-    <History>True|2023-09-10T14:45:54.1218497Z;True|2023-09-08T14:39:35.6453789-05:00;True|2023-09-08T14:20:55.0025593-05:00;True|2023-09-08T14:17:01.2720871-05:00;True|2023-09-08T13:51:57.0951370-05:00;</History>
+    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAr0+iq557Z0WbslFasVxQ5wAAAAACAAAAAAAQZgAAAAEAACAAAADDHLh7DS1pwd8IZaxRUJn/wHtqOuxjU5SYz2H+LEtzFwAAAAAOgAAAAAIAACAAAAAIzrwDzq5x1ljIyZWSR8L462OPgWtUPdHmrC2b4odtkoAAAAA/6N4nR0Esf6N0uYYtZ54XVUNcoY6535dcwYCPp3gQIdi4UXbl9WklyBC1jbwMivbqmbEQEt8c4GayrdclO06i8ZxDjS24T7/Or8x71DPJT/FpVuRFc1LRVCyKYUOfrumwfpy/TI6GZcg5Jt0HOb9dDggC2vR1VqcE6SvRQS3R4EAAAADbj9JGrgYeHQQA+QdJFTg3H417JWi1K3l9AUDx68D/1Uuizq+YxdhHj6Z+TDx7vcxmmp2ACkWPhzDPBCigW40a</EncryptedPassword>
+    <History>True|2023-09-19T05:09:29.3667485Z;True|2023-09-18T14:52:37.4326172-04:00;</History>
     <LastFailureDetails />
   </PropertyGroup>
-  <ItemGroup>
-    <DestinationConnectionStrings Include="DataToolKitDbContextConnection">
-      <Value>Server=tcp:plavasql.database.windows.net,1433%3bInitial Catalog=DTK%3bPersist Security Info=False%3bUser ID=sqladmin%3bPassword=Sqlplava%40admin%3bMultipleActiveResultSets=False%3bEncrypt=True%3bTrustServerCertificate=False%3bConnection Timeout=30%3b</Value>
-    </DestinationConnectionStrings>
-  </ItemGroup>
 </Project>
