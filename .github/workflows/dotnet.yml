@@ -39,3 +39,5 @@ jobs:
         name: website
         path: DataToolKit/DataToolKit/website/**
         if-no-files-found: error
+      env:
+        DOTNET_ROOT: /home/runner/work
