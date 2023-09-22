@@ -37,5 +37,5 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: website
-        path: DataToolKit/website/**
+        path: DataToolKit/DataToolKit/website/**
         if-no-files-found: error
