@@ -37,7 +37,34 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: website
-        path: DataToolKit/DataToolKit/website/**
+        path: website/**
         if-no-files-found: error
-      env:
-        DOTNET_ROOT: /home/runner/work
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    environment:
+      name: PROD
+      url: ${{ steps.deploywebapp.outputs.webapp-url }}
+
+    steps:
+    - name: Download a Build Artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: website
+        path: website
+
+    - name: Login via Azure CLI
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Deploy web app
+      id: deploywebapp
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: POCNDTK
+        package: website
+
+    - name: az cli logout
+      run: az logout
