@@ -1,4 +1,4 @@
-﻿using DataToolKit.Areas.Identity.Data;
+using DataToolKit.Areas.Identity.Data;
 using System.Security.Claims;
 using System;
 using System.Collections.Generic;
