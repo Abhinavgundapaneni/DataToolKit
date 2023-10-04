@@ -109,145 +109,147 @@ namespace DataToolKit.Pages.Home
             string fileName = "";
             string rtnVal = "";
 
-            //Console.WriteLine("Upload start" + DateTime.Now.ToString());
+            // SET Upload in Progress
+            TempData["UploadSuccessMessage"] = "Upload is in Progress";
 
             if (ModelState.IsValid)
             {
-                DTKDB db = new DTKDB(_configuration);
-
-                IFormFile uploadedFile = Request.Form.Files["postedFile"];
-
-                if (uploadedFile != null && uploadedFile.Length > 0)
+                _ = Task.Run(() =>
                 {
-                    fileName = uploadedFile.FileName;
-                    Batch.InputFileName = fileName;
-                    Batch.SubmitName = User.Identity?.Name;
-                }
+                    DTKDB db = new DTKDB(_configuration);
 
-                // Save batch data and upload file here
-                BatchId = db.InsertBatchControl(Batch);
-                fileName = BatchId.ToString() + "_" + fileName;
+                    IFormFile uploadedFile = Request.Form.Files["postedFile"];
 
-                if (uploadedFile != null && uploadedFile.Length > 0)
-                {
-                    //string path = _configuration["UploadedFilePath"];
-                    string path = Path.Combine(this._environment.WebRootPath, "UploadFiles");                   
-
-                    if (!Directory.Exists(path))
+                    if (uploadedFile != null && uploadedFile.Length > 0)
                     {
-                        Directory.CreateDirectory(path);
-                    }
-                    //Save the uploaded Excel file.
-                    string filePath = Path.Combine(path, fileName);
-
-                    using (FileStream stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        uploadedFile.CopyTo(stream);
+                        fileName = uploadedFile.FileName;
+                        Batch.InputFileName = fileName;
+                        Batch.SubmitName = User.Identity?.Name;
                     }
 
-                    string csvData = System.IO.File.ReadAllText(filePath);
+                    // Save batch data and upload file here
+                    BatchId = db.InsertBatchControl(Batch);
+                    fileName = BatchId.ToString() + "_" + fileName;
 
-                    bool firstRow = true;
-                    //SqlConnection sqlcon;
-                    //sqlcon = new(_configuration.GetConnectionString("DataToolKitDbContextConnection"));
-                    //StreamReader reader1;
-                    //using (reader1 = new StreamReader(filePath))
-                    //using (var csv = new CsvReader(reader1, CultureInfo.InvariantCulture))
-                    //{
-                    //    // Do any configuration to `CsvReader` before creating CsvDataReader.
-                    //    using (var dr = new CsvDataReader(csv));
-                    //    using (var con = new SqlConnection(sqlcon)) ;
-                    //    using (var bcp = new SqlBulkCopy(con))
-                    //    {
-                    //        bcp.DestinationTableName = "dbo.BulkCopyDemoMatchingColumns";
-                    //        con.Open();
-
-                    //        bcp.WriteToServer(reader1);
-                    //    }
-                    //}
-                    var i = 0;
-                    //Console.WriteLine("Upload step 2" + DateTime.Now.ToString());
-                    DataTable BatchDataFile_DT = new DataTable();
-
-                    // Define the columns in the DataTable (assuming MyData has properties ID and Name)
-                    BatchDataFile_DT.Columns.Add("BatchId", typeof(int));
-                    BatchDataFile_DT.Columns.Add("NPI", typeof(int));
-                    BatchDataFile_DT.Columns.Add("Segment", typeof(string));
-
-                    foreach (string row in csvData.Split('\n'))
+                    if (uploadedFile != null && uploadedFile.Length > 0)
                     {
-                        i = i + 1;     
+                        //string path = _configuration["UploadedFilePath"];
+                        string path = Path.Combine(this._environment.WebRootPath, "UploadFiles");
 
-                        if (!string.IsNullOrEmpty(row))
+                        if (!Directory.Exists(path))
                         {
+                            Directory.CreateDirectory(path);
+                        }
+                        //Save the uploaded Excel file.
+                        string filePath = Path.Combine(path, fileName);
+
+                        using (FileStream stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            uploadedFile.CopyTo(stream);
+                        }
+
+                        string csvData = System.IO.File.ReadAllText(filePath);
+
+                        bool firstRow = true;
+                        //SqlConnection sqlcon;
+                        //sqlcon = new(_configuration.GetConnectionString("DataToolKitDbContextConnection"));
+                        //StreamReader reader1;
+                        //using (reader1 = new StreamReader(filePath))
+                        //using (var csv = new CsvReader(reader1, CultureInfo.InvariantCulture))
+                        //{
+                        //    // Do any configuration to `CsvReader` before creating CsvDataReader.
+                        //    using (var dr = new CsvDataReader(csv));
+                        //    using (var con = new SqlConnection(sqlcon)) ;
+                        //    using (var bcp = new SqlBulkCopy(con))
+                        //    {
+                        //        bcp.DestinationTableName = "dbo.BulkCopyDemoMatchingColumns";
+                        //        con.Open();
+
+                        //        bcp.WriteToServer(reader1);
+                        //    }
+                        //}
+                        var i = 0;
+                        //Console.WriteLine("Upload step 2" + DateTime.Now.ToString());
+                        DataTable BatchDataFile_DT = new DataTable();
+
+                        // Define the columns in the DataTable (assuming MyData has properties ID and Name)
+                        BatchDataFile_DT.Columns.Add("BatchId", typeof(int));
+                        BatchDataFile_DT.Columns.Add("NPI", typeof(int));
+                        BatchDataFile_DT.Columns.Add("Segment", typeof(string));
+
+                        foreach (string row in csvData.Split('\n'))
+                        {
+                            i = i + 1;
+
                             if (!string.IsNullOrEmpty(row))
                             {
-                                if (firstRow)
-                                    firstRow = false;
-                                else
-                                {                                    
-                                    var values = SplitCsv(row);
-                                    BatchDataFile_DT.Rows.Add(BatchId, Convert.ToInt32(values[0]), values[1]);
-                                    if(i==5000)
+                                if (!string.IsNullOrEmpty(row))
+                                {
+                                    if (firstRow)
+                                        firstRow = false;
+                                    else
                                     {
-                                        rtnVal = db.InsertBatchDataFileByTable(BatchDataFile_DT);
-                                        BatchDataFile_DT.Rows.Clear();
+                                        var values = SplitCsv(row);
+                                        BatchDataFile_DT.Rows.Add(BatchId, Convert.ToInt32(values[0]), values[1]);
+                                        if (i == 5000)
+                                        {
+                                            rtnVal = db.InsertBatchDataFileByTable(BatchDataFile_DT);
+                                            BatchDataFile_DT.Rows.Clear();
+                                        }
                                     }
-                                    // Upload successful, set a success message
-                                    TempData["UploadSuccessMessage"] = "Batch upload was successful.";
                                 }
                             }
                         }
-                    }
-                    if (i > 0)
-                    {
-                        rtnVal = db.InsertBatchDataFileByTable(BatchDataFile_DT);
+                        if (i > 0)
+                        {
+                            rtnVal = db.InsertBatchDataFileByTable(BatchDataFile_DT);
+                            BatchDataFile_DT.Dispose();
+                        }
+                        //Console.WriteLine("Upload step 3" + DateTime.Now.ToString());
+                        //foreach (string row in csvData.Split('\n'))
+                        //{
+                        //    i = i + 1;
+                        //    if (!string.IsNullOrEmpty(row))
+                        //    {
+                        //        if (!string.IsNullOrEmpty(row))
+                        //        {
+                        //            if (firstRow)
+                        //                firstRow = false;
+                        //            else
+                        //            {
+                        //                BatchDataFile BDF = new BatchDataFile();
+                        //                var values = SplitCsv(row);
+
+                        //                BDF.BatchId = BatchId;
+                        //                BDF.NPI = Convert.ToInt32(values[0]);
+                        //                BDF.Segment = values[1];
+                        //                string str = db.InsertBatchDataFile(BDF);
+
+                        //                // Upload successful, set a success message
+                        //                TempData["UploadSuccessMessage"] = "Batch upload was successful.";
+                        //            } 
+                        //        }
+                        //    }
+                        //}
+                        if (System.IO.File.Exists(filePath))
+                        {
+                            System.IO.File.Delete(filePath);
+                        }
+
                         BatchDataFile_DT.Dispose();
                     }
-                    //Console.WriteLine("Upload step 3" + DateTime.Now.ToString());
-                    //foreach (string row in csvData.Split('\n'))
-                    //{
-                    //    i = i + 1;
-                    //    if (!string.IsNullOrEmpty(row))
-                    //    {
-                    //        if (!string.IsNullOrEmpty(row))
-                    //        {
-                    //            if (firstRow)
-                    //                firstRow = false;
-                    //            else
-                    //            {
-                    //                BatchDataFile BDF = new BatchDataFile();
-                    //                var values = SplitCsv(row);
 
-                    //                BDF.BatchId = BatchId;
-                    //                BDF.NPI = Convert.ToInt32(values[0]);
-                    //                BDF.Segment = values[1];
-                    //                string str = db.InsertBatchDataFile(BDF);
-
-                    //                // Upload successful, set a success message
-                    //                TempData["UploadSuccessMessage"] = "Batch upload was successful.";
-                    //            } 
-                    //        }
-                    //    }
-                    //}
-                    if (System.IO.File.Exists(filePath))
-                    {
-                        System.IO.File.Delete(filePath);
-                    }
-
-                    BatchDataFile_DT.Dispose();
-                }                   
-
-                string rtnMessage = db.UpdateBatchControlFile(BatchId);
-                //Console.WriteLine("Upload step 4" + DateTime.Now.ToString());
-                //rtnVal = db.RunProcessBatch(BatchId);
-                //Console.WriteLine("Upload step 5" + DateTime.Now.ToString());
-                //rtnVal = db.RunReportBatch(BatchId);
-                //Console.WriteLine("Upload end" + DateTime.Now.ToString());
+                    string rtnMessage = db.UpdateBatchControlFile(BatchId);
+                    //Console.WriteLine("Upload step 4" + DateTime.Now.ToString());
+                    //rtnVal = db.RunProcessBatch(BatchId);
+                    //Console.WriteLine("Upload step 5" + DateTime.Now.ToString());
+                    //rtnVal = db.RunReportBatch(BatchId);
+                    //Console.WriteLine("Upload end" + DateTime.Now.ToString());
+                });
             }
 
             //Send Mail to internal team
-            await _helper.sendEmailAsync(BatchId);
+            //await _helper.sendEmailAsync(BatchId);
 
             // Reload batch data after saving
             LoadBatchData(1, "", null, null);
