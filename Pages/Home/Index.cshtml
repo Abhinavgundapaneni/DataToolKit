@@ -70,8 +70,7 @@
                     </td>
 
                     <td class="button-cell" colspan="1">
-                        <button type="submit" class="btn btn-primary">Upload</button>&nbsp;
-                        @*  <button type="submit" name="clearButton" class="btn btn-secondary">Clear</button> *@
+                        <button id="uploadBtn" type="submit" class="btn btn-primary">Upload</button>&nbsp;
                     </td>
                     <td class="success-message-cell" colspan="2">
                         @if (!string.IsNullOrEmpty(TempData["UploadSuccessMessage"]?.ToString()))
@@ -120,8 +119,14 @@
         </div>
     </div>
 
+    <!-- Loading Spinner -->
+    <div id="LoadingDiv" style="display: none;">
+        <div id="loading-text"><h2>Loading</h2></div>
+        <div id="spinner"></div>
+    </div>
+
     <!-- Batch List -->
-    <div class="table-responsive">
+    <div class="table-responsive" id="batchControlTableDiv">
         <h6>Batch Control</h6>
         <div>
             <table id="batchGrid" class="table">
@@ -243,6 +248,14 @@ else
                 }
             });
         }
+
+        // Set Loading during upload is in progress.
+        $("#uploadBtn").click(function (event) {
+            document.getElementById("LoadingDiv").style.display = "flex";
+            document.getElementById("LoadingDiv").style.flexDirection = "row";
+            document.getElementById("LoadingDiv").style.justifyContent = "center";
+            document.getElementById("batchControlTableDiv").style.display = "none";
+        });
 
         // Attach a click event handler to the trigger buttons
         $(".open-popup-button").click(function () {
