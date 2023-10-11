@@ -271,10 +271,7 @@ body {
     color: #4CAF50;
     border-radius: 5px;
     text-align: center;
-    animation: css 0s 3s forwards;
 }
-
-@keyframes css  { to { visibility: hidden; } }
 
     #upload-success-message.show {
         display: block; /* Display the message as a block element inside the cell */
