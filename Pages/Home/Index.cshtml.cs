@@ -7,6 +7,7 @@ using DataToolKit.Areas.Identity.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.AspNetCore.Hosting;
 using System.Formats.Asn1;
 using CsvHelper;
@@ -194,11 +195,11 @@ namespace DataToolKit.Pages.Home
                                         BatchDataFile_DT.Rows.Clear();
                                     }
                                     // Upload successful, set a success message
-                                    TempData["UploadSuccessMessage"] = "Batch upload was successful.";
                                 }
                             }
                         }
                     }
+                    TempData["UploadSuccessMessage"] = "Batch upload was successful.";
                     if (i > 0)
                     {
                         rtnVal = db.InsertBatchDataFileByTable(BatchDataFile_DT);
@@ -269,6 +270,22 @@ namespace DataToolKit.Pages.Home
                 // This needs to be a redirect so that the browser performs a new
                 // request and the identity for the user gets updated.
                 return RedirectToPage();
+            }
+        }
+
+        public async Task<IActionResult> OnGetDownloadAsync() 
+        {
+            var rootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+            var fileInfo = new PhysicalFileProvider(rootPath).GetFileInfo("templates/NPIDataTemplate.csv");
+
+            if (fileInfo.Exists)
+            {
+                var fileStream = new FileStream(fileInfo.PhysicalPath, FileMode.Open, FileAccess.Read);
+                return File(fileStream, "text/csv", fileInfo.Name);
+            }
+            else
+            {
+                return NotFound();
             }
         }
 

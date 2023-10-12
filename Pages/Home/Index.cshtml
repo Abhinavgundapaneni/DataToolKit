@@ -16,7 +16,10 @@
 @if (SignInManager.IsSignedIn(User))
 {
     <div class="container mt-4">
-        <h6>Upload Data</h6>
+        <div style="display: flex; justify-content: space-between">
+            <h6>Upload Data</h6>
+            <a style="margin:10px" asp-page-handler="Download">Download Template</a>
+        </div>
         <form method="post" enctype="multipart/form-data">
             <table class="form-table">
                 <tr>
@@ -64,6 +67,7 @@
                     </td>
                     <td class="label-cell">
                         <label for="fileUpload">Select File<sup>*</sup> :</label>
+                        <div id="errorMessage" style="display: none; color: red;">Unsupported file format.</div>
                     </td>
                     <td class="control-cell">
                         <input type="file" name="postedFile" id="postedFile" class="form-control-file" required />
@@ -251,6 +255,12 @@ else
 
         // Set Loading during upload is in progress.
         $("#uploadBtn").click(function (event) {
+            if(document.getElementById("postedFile").value.slice(-3) != "csv") {
+                event.preventDefault();
+                document.getElementById("postedFile").value = "";
+                document.getElementById("errorMessage").style.display = "block";
+                return;
+            }
             document.getElementById("LoadingDiv").style.display = "flex";
             document.getElementById("LoadingDiv").style.flexDirection = "row";
             document.getElementById("LoadingDiv").style.justifyContent = "center";
