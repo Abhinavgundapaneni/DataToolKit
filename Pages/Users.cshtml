@@ -60,6 +60,7 @@
                 <tr>
                     <th>Name</th>
                     <th>Email</th>
+                    <th>Company</th>
                     <th></th>
                     <th></th>
                 </tr>
@@ -70,6 +71,7 @@
                     <tr>
                         <td style="width:20%">@user.firstName @user.lastName</td>
                         <td style="width:20%">@user.Email</td>
+                        <td style="width:20%">@user.customerName</td>
                         <td style="width:20%">
                             <form method="post" asp-page-handler="Delete" asp-route-id="@user.Id">
                                 <button type="submit" class="btn btn-danger">Delete</button>
