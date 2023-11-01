@@ -109,6 +109,7 @@ namespace DataToolKit.Pages.Home
             int BatchId = 0;
             string fileName = "";
             string rtnVal = "";
+            bool isSuccess = true;
 
             //Console.WriteLine("Upload start" + DateTime.Now.ToString());
 
@@ -193,18 +194,26 @@ namespace DataToolKit.Pages.Home
                                     {
                                         rtnVal = db.InsertBatchDataFileByTable(BatchDataFile_DT);
                                         BatchDataFile_DT.Rows.Clear();
+                                        if (rtnVal != "success")
+                                        {
+                                            isSuccess = false;
+                                            break;
+                                        }
                                     }
-                                    // Upload successful, set a success message
                                 }
                             }
                         }
                     }
-                    TempData["UploadSuccessMessage"] = "Batch upload was successful.";
                     if (i > 0)
                     {
                         rtnVal = db.InsertBatchDataFileByTable(BatchDataFile_DT);
                         BatchDataFile_DT.Dispose();
+                        if (rtnVal != "success")
+                        {
+                            isSuccess = false;
+                        }
                     }
+                    
                     //Console.WriteLine("Upload step 3" + DateTime.Now.ToString());
                     //foreach (string row in csvData.Split('\n'))
                     //{
@@ -238,8 +247,16 @@ namespace DataToolKit.Pages.Home
 
                     BatchDataFile_DT.Dispose();
                 }                   
-
-                string rtnMessage = db.UpdateBatchControlFile(BatchId);
+                if (isSuccess == true)
+                {
+                    TempData["UploadSuccessMessage"] = "Batch upload was successful.";
+                    string rtnMessage = db.UpdateBatchControlFile(BatchId);
+                }
+                else
+                {
+                    TempData["UploadFailureMessage"] = "Batch upload was Failed.";
+                    string rtnMessage = db.SetBatchControlAsFailure(BatchId);
+                }
                 //Console.WriteLine("Upload step 4" + DateTime.Now.ToString());
                 //rtnVal = db.RunProcessBatch(BatchId);
                 //Console.WriteLine("Upload step 5" + DateTime.Now.ToString());
@@ -284,7 +301,7 @@ namespace DataToolKit.Pages.Home
                 return File(fileStream, "text/csv", fileInfo.Name);
             }
             else
-            {
+            {  
                 return NotFound();
             }
         }

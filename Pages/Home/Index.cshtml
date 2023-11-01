@@ -83,6 +83,12 @@
                                 @TempData["UploadSuccessMessage"]
                             </div>
                         }
+                        @if (!string.IsNullOrEmpty(TempData["UploadFailureMessage"]?.ToString()))
+                        {
+                            <div id="upload-failure-message" class="alert alert-danger">
+                                @TempData["UploadFailureMessage"]
+                            </div>
+                        }
                     </td>
                 </tr>      
 

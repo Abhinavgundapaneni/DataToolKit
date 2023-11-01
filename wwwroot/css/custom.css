@@ -291,9 +291,23 @@ body {
     text-align: center;
 }
 
-    #upload-success-message.show {
-        display: block; /* Display the message as a block element inside the cell */
-    }
+#upload-success-message.show {
+    display: block; /* Display the message as a block element inside the cell */
+}
+
+/* Styles for the failure message */
+#upload-failure-message {
+    padding: 10px;
+    border: 1px solid #4CAF50;
+    background-color: #ff8080;
+    color: #e60000;
+    border-radius: 5px;
+    text-align: center;
+}
+
+#upload-failure-message.show {
+    display: block; /* Display the message as a block element inside the cell */
+}
 
 
 /* Jumbotron Styles */

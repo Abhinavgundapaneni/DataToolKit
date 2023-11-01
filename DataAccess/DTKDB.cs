@@ -69,6 +69,27 @@ namespace DataToolKit.DataAccess
             }
         }
 
+        public string SetBatchControlAsFailure(int batchId)
+        {
+            try
+            {
+                string cmdStr = @"UPDATE [Uncovered].[Batch_Control_File] SET [Status_Description] = 'Failed' WHERE BatchId = " + batchId.ToString() + ";" + Environment.NewLine +  "DELETE FROM [Uncovered].[Batch_data_file] WHERE BatchId = " + batchId.ToString();
+                SqlCommand cmd = new SqlCommand(cmdStr, sqlcon);
+                sqlcon.Open();
+                cmd.ExecuteNonQuery();
+                sqlcon.Close();
+                return ("success");
+            }
+            catch (Exception ex)
+            {
+                if (sqlcon.State == ConnectionState.Open)
+                {
+                    sqlcon.Close();
+                }
+                return (ex.Message.ToString());
+            }
+        }
+
         public string InsertBatchDataFile(BatchDataFile BDF)
         {
 
